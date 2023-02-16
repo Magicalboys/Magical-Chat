@@ -1,0 +1,3 @@
+# 代表的是不放入git的文件夹
+node_modules
+uploads

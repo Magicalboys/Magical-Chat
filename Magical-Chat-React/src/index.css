@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100;200;400;500;700&family=Ma+Shan+Zheng&family=ZCOOL+KuaiLe&display=swap');
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+}
+a{
+  text-decoration: none;
+  color: white;
+}
+body,button,input{
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+body{
+  max-height: 100vh;
+  max-width:100vw;
+  overflow: hidden;
+}
