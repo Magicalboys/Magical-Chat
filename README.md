@@ -30,11 +30,11 @@ emoji-pick-react + react-toastify + uuid + @koa/cors + axios + react-icons + sty
 
 * 展示用户 GitHub 或 blog 链接
 
-...
+* ...
 
 
 开发时需要注意的坑点：
 
 * MySQL 如果要支持emoji，字符集需要默认是`utf8mb4`，因为`utf8`只能存储 3 字节 ，而一般的`emoji`表情是 4 字节
 
-... 
+* ... 
