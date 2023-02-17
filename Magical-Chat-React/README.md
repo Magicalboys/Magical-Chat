@@ -1,4 +1,4 @@
 
-启动命令
+启动项目：
 
-`npm run start`
+npm run start
