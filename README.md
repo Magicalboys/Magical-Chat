@@ -27,6 +27,8 @@ emoji-pick-react + react-toastify + uuid + @koa/cors + axios + react-icons + sty
 
 * 展示用户 GitHub 或 blog 链接
 
+* 根据消息，实时更新用户列表顺序
+
 * ...
 
 
