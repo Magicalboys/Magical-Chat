@@ -36,7 +36,7 @@ emoji-pick-react + react-toastify + uuid + @koa/cors + axios + react-icons + sty
 
 * MySQL 如果要支持emoji，字符集需要默认是`utf8mb4`，因为`utf8`只能存储 3 字节 ，而一般的 emoji 表情是 4 字节
 
-部署是需要注意的坑点：
+部署时需要注意的坑点：
 
 * 启动端口后如果没响应先看看是否放行了改端口。
 
@@ -50,7 +50,7 @@ emoji-pick-react + react-toastify + uuid + @koa/cors + axios + react-icons + sty
 
 * 入口文件中端口号如果是 配置文件 `env` 中定义的常量的话，启动目录一定要和 `env` 是同级，不然访问不到pm2访问不到。
 
-* 如果前端升级成了 HTTPS，后端接口也需要部署 SSL证书 升级成 HTTPS 才能访问资源，方法是在PM2管理器中映射一个新的子域名即可。
+* 如果前端升级成了 `HTTPS`，后端接口也需要部署 `SSL` 证书 升级成 `HTTPS` 才能访问资源，方法是在 PM2管理器 中映射一个新的子域名即可。
 
 
 
