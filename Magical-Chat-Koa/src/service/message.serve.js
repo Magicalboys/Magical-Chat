@@ -32,6 +32,23 @@ class MessageService {
       console.log(error)
     }
   }
+  // 3. 查询群聊消息
+  async getAllMessage( from , to ){
+    try {
+    // 拼接 statment
+    const statement = 'SELECT message,sender FROM `message` WHERE (users) = ? order by `timestamps`;';
+    
+    // 执行 SQL 语句
+    const [result] = await connection.execute(statement,[to]);
+
+    // 异步函数 需要等待语句执行完,再进行下一步操作
+    
+    return result; 
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
 
 module.exports = new MessageService()

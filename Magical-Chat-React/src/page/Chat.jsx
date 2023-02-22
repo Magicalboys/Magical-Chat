@@ -1,89 +1,74 @@
 import React, { useEffect, useState,useRef } from "react";
 import styled  from 'styled-components';
-import axios from "axios";
-import { useNavigate } from 'react-router-dom';
-import { allUserRouter } from "../utils/ApiRoutes";
 import { Contacts } from "../components/Contacts";
 import { Welcome }  from './../components/Welcome';
 import ChatContainer from "../components/ChatContainer";
 import { io } from 'socket.io-client'
-import { host } from './../utils/ApiRoutes';
+import { SOCKETHOST } from './../utils/ApiRoutes';
+import {  useCurrentUser } from "../utils/Chat";
 function Chat (){
 
   const socket = useRef();
-
-  const [ contacts ,setContact] = useState([]);
-
-  const [ currentUser , setCurrentUser] = useState(undefined);
   
   const [ currentChat, setCurrentChat ] = useState(undefined)
 
-  const [ isLoaded ,setIsLoaded ] = useState(false)
+  const [showWelcome,setShowWelcome] = useState(true)
 
-  const navigate = useNavigate();
-  
+  const {isLoaded, currentUser , contacts } = useCurrentUser()
+
   // 建立socket连接,将当前用户信息传给后端
-  try {
-    useEffect(()=>{
-      if(currentUser){
-        socket.current = io("ws://chat.magicalboy.cn:8000")
-        socket.current.emit("add-user",currentUser.username)
-      }
-    },[currentUser])
-  } catch (error) {
-    console.log(error)
-  }
-
-
-  //  destroy is not a function
-  const midSetCurrentUser = async ()=>{
-    if(!localStorage.getItem('chat-app-user')){
-      navigate('/login')
-    }else{
-      setCurrentUser(await JSON.parse(localStorage.getItem('chat-app-user')))
-      setIsLoaded(true)
+  useEffect(()=>{
+    if(currentUser){
+      socket.current = io(SOCKETHOST)
+      socket.current.emit("add-user",currentUser.username)
     }
-  }
-  // 必须封装成函数
-  useEffect(()=>{midSetCurrentUser()},[]) 
+  },[currentUser])
 
+  const handleChatChange = (chat) => setCurrentChat(chat)
+ 
+  const handleWelcome = (showWelcome) => setShowWelcome(showWelcome);
+
+  const [show,setShow] = useState(true)
+
+  // const [showUser,setShowUser] = useState(true)
+  // const handleShow = (show) => { 
+  //   setShow(show) ;
+  // }
+  // useEffect(()=>{
+  //   if (window.screen.availWidth > 300 && window.screen.availWidth < 720 && show) {
+  //     // 当前设备是移动设备
+  //     setShowUser(false)
+  //   }
+  // },[show])
   
-  const midSetContact = async ()=>{
-    if(currentUser ){
-
-      if(currentUser.avatarImage){
-        
-        const { data } = await axios.get(`${allUserRouter}/${currentUser.id}`)
-        
-        const { allUser } = data
-      
-        setContact([...allUser])
-
-      }else{
-        navigate('/avater')
-      }
-    }
-  }
-
-  useEffect(()=>{midSetContact()},[currentUser])
-
+  // useEffect(()=>{
+  //   if (window.screen.availWidth > 300 && window.screen.availWidth < 720 ) {
+  //     // 当前设备是移动设备
+  //     setShow(false)
+  //   }
+  // },[window.screen.availWidth])
   
-  const handleChatChange = (chat) =>{
-    setCurrentChat(chat);
-  }
-
   return (
     <Container>
       <div className="container">
-        <Contacts contacts = {contacts} currentUser ={currentUser} changeChat = {handleChatChange}/> 
-        {
-          isLoaded && 
-            currentChat === undefined ? (
-              <Welcome currentUser = {currentUser} ></Welcome>
-            ):(
-              <ChatContainer currentChat = {currentChat} currentUser = { currentUser } socket={socket}/>
+        {/* {
+          showUser &&
+          <Contacts changeChat = {handleChatChange} handleWelcome={handleWelcome} handleShow={handleShow}/> 
+        } */}
+        <>
+        <Contacts changeChat = {handleChatChange} handleWelcome={handleWelcome}/> 
+
+          {
+            show && (
+              !showWelcome|| ( isLoaded   &&
+                currentChat === undefined )? (
+                  <Welcome  currentUser = {currentUser} ></Welcome>
+                ):(
+                  <ChatContainer  currentChat = {currentChat} currentUser = { currentUser } socket={socket}/>
+                )
             )
-        }
+          }
+        </>
       </div>
     </Container>
   )

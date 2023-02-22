@@ -1,16 +1,8 @@
 import React from 'react'
-import { Link } from "react-router-dom";
-import loader from "../assets/loader.gif";
-import { useState ,useEffect } from "react";
+import { useState  } from "react";
 import 'react-toastify/dist/ReactToastify.css'
-import { ToastContainer,toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
-import { setAvatarRouter } from '../utils/ApiRoutes';
 import styled from 'styled-components'
-import { handleValidation, toastOptions } from "../utils";
-import { Buffer} from 'buffer'
-import axios from 'axios';
-import { network } from "../network";
 import { Button } from './../page/Login';
 
 export default function Github({getGithub}) {
@@ -26,7 +18,6 @@ export default function Github({getGithub}) {
     setavatar([...avatar,event.target.value])
     setqqAvater(avatar[avatar.length-1])
   }
-  console.log(qqAvater)
   getGithub(qqAvater)
     
   return (

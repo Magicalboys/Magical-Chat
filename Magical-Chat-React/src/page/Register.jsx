@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useState ,useEffect } from "react";
+import { useState } from "react";
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
@@ -19,17 +19,11 @@ function Register() {
     confirmPassword:"",
   },[])
   
-  // 登录之后 自动重定向到聊天页面
-  // useEffect( ()=>{
-  //   if(localStorage.getItem('chat-app-user')){
-  //     navigate('/login')
-  //   }
-  // }) 
-  
 // 如果注册成功进入登录页面
   const handleSumbit = async (event) => {
     event.preventDefault()
     if(handleValidation(values)){
+      
 
       const flag = await network(values,registerRouter,true);
       if(flag){

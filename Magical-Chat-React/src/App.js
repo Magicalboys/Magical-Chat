@@ -5,8 +5,10 @@ import Chat from './page/Chat'
 import Login from './page/Login'
 import Register from './page/Register'
 import UserData from './page/UserData'
-import { useEffect } from 'react';
 export default function App() {
+
+console.log(`方便的话可以给个start嘛,非常感谢!
+https://github.com/Magicalboys/Magical-Chat`)
 
   return (
     <BrowserRouter>

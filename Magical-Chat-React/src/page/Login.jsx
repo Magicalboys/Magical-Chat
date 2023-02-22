@@ -1,12 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useState ,useEffect } from "react";
+import { useState  } from "react";
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import { loginRouter } from '../utils/ApiRoutes';
 import styled from 'styled-components'
-import { handleValidation } from "../utils";
 import { network } from "../network";
 
 function Login() {
@@ -17,13 +16,6 @@ function Login() {
     username:"",
     password:""
   })
-  
-  // 注册之后 自动重定向到登录页面
-  // useEffect( ()=>{
-  //   if(localStorage.getItem('chat-app-user')){
-  //     navigate('/avater')
-  //   }
-  // },[]) 
 
   const handleSumbit = async (event) => {
     event.preventDefault()
@@ -33,7 +25,6 @@ function Login() {
     if( success ){
       // 查看自己曾经是否设置了头像
       const { avatarImage } =  JSON.parse(localStorage.getItem('chat-app-user'));
-
 
       // 如果已经设置 直接去 chat 页面   
       avatarImage ? navigate('/chat') :navigate('/avatar')

@@ -1,11 +1,9 @@
-import React ,{ useCallback, useEffect } from 'react'
+import React  from 'react'
 import { useNavigate } from 'react-router-dom'
-import { toast, ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 // 登出图标
 import { BiPowerOff } from 'react-icons/bi'
 import styled from 'styled-components'
-import { debounce, toastOptions } from '../utils';
-import { useState } from 'react';
 
 export default function Logout() {
   
@@ -26,7 +24,7 @@ export default function Logout() {
     <>
       <ToastContainer limit={1}/>
       {/* <Button onClick={handleClick} onMouseOver = {debounce(handleMouse,1300)}> */}
-      <Button>
+      <Button onClick={handleClick}>
         <BiPowerOff/>
       </Button>
     </>

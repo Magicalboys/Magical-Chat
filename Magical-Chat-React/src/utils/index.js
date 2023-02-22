@@ -1,4 +1,16 @@
 import { toast } from 'react-toastify'
+import avater_1 from "../assets/avater_1.png";
+import avater_2 from "../assets/avater_2.png";
+import avater_3 from "../assets/avater_3.png";
+import avater_4 from "../assets/avater_4.png";
+import avater_5 from "../assets/avater_5.png";
+
+let Image = [];
+Image[1] = avater_1;
+Image[2] = avater_2;
+Image[3] = avater_3;
+Image[4] = avater_4;
+Image[5] = avater_5;
 
 const toastOptions = {
   position:'top-center',
@@ -8,11 +20,12 @@ const toastOptions = {
   draggable:true,
   theme:'dark',
 }
+
 const handleValidation = (values)=>{
   const { password ,confirmPassword ,username ,email } = values;
 
   if( password !== confirmPassword ){
-    console.log( username[0] )
+    // console.log( username[0] )
     toast.error('两次输入密码不一样呀，检查检查~',toastOptions)
     return false;
   }
@@ -54,6 +67,7 @@ function debounce(func, wait) {
   }
 }
 export  {
+  Image,
   debounce,
   toastOptions,
   handleValidation,

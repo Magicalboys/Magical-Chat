@@ -16,9 +16,11 @@ const server = app.listen(SERVER_PORT, () => {
   console.log('coderhub 的服务器启动成功')
 })
 
+console.log(ORIGINHOST)
+
 const io = socket(server, {
   cors: {
-    origin: "https://chat.magicalboy.cn:80",
+    origin:ORIGINHOST,
     credentials: true,
   },
 })
@@ -26,16 +28,27 @@ const io = socket(server, {
 global.onlineUsers = new Map();
 
 io.on("connection", (socket) => {
+  
   global.chatSocket = socket;
 
   socket.on("add-user", (username) => {
+    // socket.name = username;
     onlineUsers.set(username, socket.id);
   })
 
   socket.on("send-msg", (data) => {
+
     const sendUserSocket = onlineUsers.get(data.to)
+  
     if (sendUserSocket) {
-      socket.to(sendUserSocket).emit("msg-recieve", data.message)
+      socket.to(sendUserSocket).emit("msg-recieve", data)
     }
   })
+  
+  socket.on("send-gmsg", (data) => {
+
+    socket.broadcast.emit("msg-group-recieve", data)
+
+  })
+
 })

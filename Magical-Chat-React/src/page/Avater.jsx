@@ -1,94 +1,21 @@
 import React from 'react'
-import { Link } from "react-router-dom";
 import loader from "../assets/loader.gif";
-import { useState ,useEffect } from "react";
+import { useState  } from "react";
 import 'react-toastify/dist/ReactToastify.css'
-import { ToastContainer,toast } from 'react-toastify'
-import { useNavigate } from 'react-router-dom'
-import { setAvatarRouter } from '../utils/ApiRoutes';
+import { ToastContainer } from 'react-toastify'
 import styled from 'styled-components'
-import { handleValidation, toastOptions } from "../utils";
-import { Buffer} from 'buffer'
-import axios from 'axios';
-import { network } from "../network";
 import { Button } from './Login';
+import { useAvater } from '../utils/Avater';
 
 export default function Avater() {
   
-  const api = `https://api.multiavatar.com`;
+  const [ selectAvatar , setSelecteAvater] = useState((undefined))
+  
+  const { isLoading , avatars , setProfilePicture } = useAvater(selectAvatar)
 
-  const navigate = useNavigate();
-
-  const [ avatars ,setAvatars] = useState([]);
-  const [ isLoading ,setIsLoading] = useState(true);
-  const [ selectAvatar,setSelecteAvater] = useState((undefined))
-  // 注册之前或者选头像之后 自动重定向到登录页面
-  useEffect(()=>{
-  const user = JSON.parse(localStorage.getItem('chat-app-user'));
-  if( ! user || user.avatarImage ){
-    navigate('/login')
-  }
-  },[])  
-
-
-  const setProfilePicture = async() =>{ 
-    if(selectAvatar === undefined) {
-      toast.error("选一个头像吧~",toastOptions);
-      return ;
-    }  
-    try {
-      // 获取id
-      const user = await JSON.parse(localStorage.getItem('chat-app-user'));
-      
-      console.log(user.id)
-
-      // 将头像与id传给数据库
-      const { data } = await axios.post(`${setAvatarRouter}/${user.id}`,{
-        avatarImage:avatars[selectAvatar]
-      })
-      const { code,image } = data
-
-      // 头像设置成功
-      if( code === 0 ){
-
-        user.avatarImage = image;
-
-        // 将头像信息设置到 localStorage里面
-        localStorage.setItem('chat-app-user',JSON.stringify(user))
-
-        navigate('/chat')
-      }
-      
-    } catch (error) {
-      toast.error("设置有误，请重试~",toastOptions);
-    }
-  }
-
-  const setPicture = async () =>{
-    const data = [];
-    for( let i = 0 ; i < 3 ; i ++){
-
-    // 根据随机数生成矢量图
-    const URL = await `${api}/${Math.round(Math.random() * 1000 )}.png`
-    
-    // 将头像的URL存入数组
-    data.push(URL)
-    
-    }
-    setAvatars(data);
-    // 加载 1 秒动画
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 1000);
-  }
-
-  useEffect(() =>{
-    setPicture()
-  },[])
   return (
     <>
-    {
-      isLoading ? <Container>
+    { isLoading ? <Container>
         <img src={loader} alt ='loader' className='loader'/>
       </Container> : (
         <Container>
@@ -122,8 +49,7 @@ export default function Avater() {
              </Button>
         </Container>
       )
-    }
-      <ToastContainer/>
+    }  <ToastContainer/>
     </>
   )
 }

@@ -25,21 +25,7 @@ class UserService {
 
     return value;
   }
-  // 2. 获取除自身以外用户
-  async findAllUser(id){
-
-    const stateUsername = 'SELECT username FROM `user` WHERE id != ? order by `id`;';
-    
-    const stateAvatar = 'SELECT avatarImage FROM `avatar` WHERE user_id != ? order by `id`;';
-
-    const [username] = await connection.execute(stateUsername,[id]);
-    
-    const [avatarImage] = await connection.execute(stateAvatar,[id]);
-
-
-    return { username , avatarImage};
-  }
-  
+  // 2. 获取除自身以外用户  
   async getAllUser(id){
 
     const stateAvatar = 'SELECT * FROM `user` WHERE id != ? order by `id`;';
@@ -48,7 +34,21 @@ class UserService {
 
     return value;
   }
+  // 3. 设置用户名
+  async setName(userId,data){
+    // 获取用户 Image 信息
+    const { username } = data;
 
+    // 拼接 statment
+    const statement = 'UPDATE `user` SET username = ? WHERE id = ?;';
+
+    // 执行 SQL 语句
+    const [result] = await connection.execute(statement,[username,userId]);
+    // 异步函数 需要等待语句执行完,再进行下一步操作
+
+    return result; 
+  }
+  // 设置头像
   async setAvatar(userId,data){
     // 获取用户 Image 信息
     const {avatarImage} = data;
@@ -73,6 +73,7 @@ class UserService {
     
     return avatarImage;
   }
+
 }
 
 module.exports = new UserService()

@@ -9,7 +9,7 @@ const fileRouter = new KoaRouter({prefix:'/file'})
 
 try {
 // file/avater 上传头像
-fileRouter.post('/avater',verifyAuth,handleAvatar,fileController.create)
+fileRouter.post('/avater',handleAvatar,fileController.create)
 } catch (error) {
   console.log(error)
 }

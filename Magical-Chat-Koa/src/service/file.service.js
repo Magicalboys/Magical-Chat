@@ -2,11 +2,11 @@ const connection = require("../app/database")
 
 // 数据库操作
 class FileService {
-  // 1. 插入用户名和密码
+  // 1. 插入文件信息
   async create( filename , mimetype , size ,userId){
 
     // 拼接 statment
-    const statement = 'INSERT INTO `file` (filename,mimetype,size,user_id) VALUES (?,?,?,?);';
+    const statement = 'INSERT INTO `file` (filename,mimetype,size,userId) VALUES (?,?,?,?);';
 
     // 执行 SQL 语句
     const [result] = await connection.execute(statement,[filename,mimetype,size,userId]);

@@ -13,11 +13,8 @@ const network = async(values,Router,Register)=> {
     password
   })
 
-  console.log(data)
-
   const { code,message,data:user  } = data;
 
-  console.log(code,message)
   
   if(code === 0 ){
 
@@ -28,7 +25,7 @@ const network = async(values,Router,Register)=> {
 
           const { avatarImage } = data
 
-          console.log( avatarImage  )
+          // console.log( avatarImage  )
 
           user.avatarImage = avatarImage; 
         }
@@ -40,7 +37,7 @@ const network = async(values,Router,Register)=> {
       } catch (error) {
 
       console.log(error)
-
+        
     }  
   } else {
 

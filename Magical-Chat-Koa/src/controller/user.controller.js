@@ -21,7 +21,6 @@ class UserController{
     } catch (error) {
       console.log(error)
     }
-
   }
    async getAllUser(ctx ,next) {
     try {
@@ -45,6 +44,34 @@ class UserController{
         next(error) 
     }
   }
+  async setName(ctx ,next) {
+    try {
+
+      // 1. 获取用户传递过来的id
+      const userId = ctx.params.userId;
+        
+      const { username } = ctx.request.body;
+      
+      // 2. 存入用户名
+      const userData = await userService.setName(userId,{
+        username
+      })      
+
+      // 4. 查看存储的结果，告知前端创建成功
+      ctx.body = {
+          code:0,
+          message:"用户名设置成功~",
+          username:username,
+        }
+      } catch (error) {
+        
+        console.log(error)  
+
+        next(error)  
+    }
+  }
+
+
 }
 
 module.exports = new UserController()

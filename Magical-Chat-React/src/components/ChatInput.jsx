@@ -4,11 +4,13 @@ import { IoMdSend } from "react-icons/io";
 import styled from "styled-components";
 import Picker from "emoji-picker-react";
 
-export default function ChatInput({ handleSendMsg }) {
+export default function ChatInput({ handleSendMsg,currentSendChat,setSendChater }) {
 
+  // console.log(currentSendChat)
   // 保存消息
   const [msg, setMsg] = useState("");
-  
+
+
   // 显示表情框
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const handleEmojiPickerhideShow = () => {
@@ -26,6 +28,7 @@ export default function ChatInput({ handleSendMsg }) {
     event.preventDefault();
     if (msg.length > 0) {
       handleSendMsg(msg);
+      setSendChater(currentSendChat)
       setMsg("");
     }
   };

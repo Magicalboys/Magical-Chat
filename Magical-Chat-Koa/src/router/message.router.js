@@ -7,7 +7,10 @@ const  MessageRouter = new KoaRouter({prefix:'/message'})
 // 2.定义路由中的映射
 // 2.1 用户注册接口
 MessageRouter.post('/addMsg',messageController.addMessage)
+
 MessageRouter.post('/getMsg',messageController.getMessage)
+MessageRouter.post('/getAllMsg',messageController.getAllMessage)
+
 
 // 2.2 为用户提供头像
 // MessageRouter.get('/avatar/:MessageId',showAvatarController)

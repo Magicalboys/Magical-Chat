@@ -1,80 +1,30 @@
-import React from 'react'
+import React , { useState }from 'react'
 import styled from 'styled-components'
 import ChatInput from './ChatInput';
 import Logout from './Logout';
-import axios  from 'axios';
-import { addMessageRouter, getMessageRouter } from './../utils/ApiRoutes';
-import { useEffect } from 'react';
-import { useState , useRef} from 'react';
-import { v4 as uuidv4 } from 'uuid'
-export default function ChatContainer({ currentChat , currentUser ,socket}) {
+import { Image } from '../utils';
+import { groupMessage, userMessage } from '../utils/Message'; 
+import { useAllMessage, useGetMessage } from '../utils/GetMessage';
+import { useCurrentUser } from '../utils/Chat';
+export default function ChatContainer({ currentUser,currentChat,socket}) {
 
-  const [ messages , setMessages ] = useState([])
-  const [ arrivalMessage , setArrivalMessage ] = useState(null)
-  
-  const scrollRef = useRef()
+  const [ sendChater ,setSendChater ] = useState(currentChat)
 
-  // 获取消息
-  const getMegs = async() => {
-    if( currentChat && currentUser ){
-      const { data }  = await axios.post(getMessageRouter,{
-      from:currentUser.username,
-      to:currentChat.username,
-      })
-      const { data:Megs } = data
-      setMessages( Megs );
-    }
-  } 
+  const { messages , handleSendMsg ,scrollRef } =  useGetMessage({ currentChat , currentUser ,socket,sendChater})
+ 
+  const { contacts  } = useCurrentUser()
 
-  useEffect(() => { getMegs() } , [currentChat])
-
-  // 将消息存入数据库
-  const  handleSendMsg = async (msg) =>{
-    await axios.post(addMessageRouter,{
-          from:currentUser.username,
-          to:currentChat.username,
-          msg:msg,
-    })
-    // 将消息通过socket发送到后端
-    socket.current.emit("send-msg",{
-      to:currentChat.username,
-      from:currentUser.username,
-      message:msg
-    })
-
-    const msgs = [...messages];
-
-    msgs.push({sender:currentUser.username,message:msg})
-
-    setMessages(msgs)
-  }
-  //接收消息
-  useEffect(()=>{
-    if( socket.current ){
-      socket.current.on('msg-recieve',(msg) =>{
-        setArrivalMessage({users:currentChat.username,message:msg})
-      })
-    }
-  },[])
-  // 将接收到的消息放入数组里
-  useEffect(()=>{
-    arrivalMessage && setMessages((prev) =>[...prev,arrivalMessage])
-  },[arrivalMessage])
-
-  // scrollIntoView方法是将调用它的元素滚动到浏览器窗口的可见区域
-  useEffect(()=>{
-    scrollRef.current?.scrollIntoView({behaviour:"smooth"});
-  },[messages])
+  const { messages:Gmessages , handleSendMsg:GhandleSendMsg ,scrollRef:GscrollRef } 
+  =  useAllMessage({ currentChat , currentUser ,socket,contacts,sendChater})
 
   return (
-    <>
-      {
-        currentChat && (
-        <Container>
+    <>{
+      currentChat && (
+        <Container className="hide">
           <div className="chat-header">
             <div className="user-details">
               <div className="avatar">
-                <img src={currentChat?.avatarImage}></img>
+                <img src={`${  currentChat.id > 5 ?currentChat?.avatarImage :Image[ currentChat.id]}`}></img>
               </div>
               <div className="username">
                 <h2>{currentChat?.username}</h2>
@@ -83,27 +33,20 @@ export default function ChatContainer({ currentChat , currentUser ,socket}) {
             <Logout/>
           </div>
           <div className="chat-messages">
-            {
-              messages.map(message =>{
-                return(
-                  <div ref={scrollRef} key={uuidv4()}>
-                      <div className={` message ${message.sender === currentUser.username ? "sended": "recieved"}` }>
-                        <div className="content">
-                          <p>
-                            {message.message}
-                          </p>
-                        </div>
-                    </div>
-                  </div>
-                )
-              })
-            }
+          {
+             currentChat.id > 5 ?  
+              userMessage({messages,scrollRef,currentUser,currentChat})
+             : groupMessage({Gmessages, GscrollRef ,currentUser,currentChat})
+          }
           </div>
-            <ChatInput handleSendMsg = { handleSendMsg } />
+          {
+             currentChat.id > 5 ?  
+             <ChatInput handleSendMsg = { handleSendMsg } currentSendChat = {currentChat} setSendChater = {setSendChater}/>
+            : <ChatInput handleSendMsg = { GhandleSendMsg } currentSendChat = {currentChat} setSendChater = {setSendChater}/>
+          }
         </Container>
-        )
-      }
-    </>
+      )
+    }</>
   )
 }
 const Container = styled.div`
@@ -112,7 +55,6 @@ const Container = styled.div`
   padding-top:1rem;
   overflow: hidden;
   grid-template-rows: 10% 81% 10%;
- 
   .chat-header{
     display: flex;
     justify-content: space-between;
@@ -121,10 +63,11 @@ const Container = styled.div`
     .user-details {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 1rem;    
       .avatar {
         img{
           height: 4rem;
+          width: 4rem;
           border-radius: 3rem;
         }
       }
@@ -151,13 +94,22 @@ const Container = styled.div`
       }
       .message {
         display: flex;
+        gap:0.5rem;
         align-items: center;
+        h3{
+          color: white;
+          display: block;
+        }
+          img{
+            height: 2.5rem;
+            border-radius: 3rem;
+          }
         .content{
           max-width:40%;
           overflow-wrap:break-word;
-          padding: 1rem;
+          padding: 0.8em;
           font-size: 1.1rem;
-          border-radius:1rem;
+          border-radius:0.7rem;
           color:#d1d1d1;
         }
       }
@@ -173,20 +125,31 @@ const Container = styled.div`
           background-color: #9900ff20;
         }
       }
-    }
-    @media screen and (min-width: 720px) and (max-width: 1080px) {
-    grid-template-rows: 15% 77% 10%;
-  }
-    @media screen and (min-width:300px) and (max-width:720px){
-      grid-template-rows: 12% 73% 15%;
-      .chat-messages{
-      height: 25rem;
-      .user-details {
+      h5{
         display: flex;
         align-items: center;
-        gap: 1rem;
+        justify-content: center;
+        color: white;
       }
     }
+    @media screen and (min-width: 720px) and (max-width: 1080px) {
+
+    grid-template-rows: 15% 77% 10%;
+
+  }
+  
+    @media screen and (min-width:300px) and (max-width:720px){
+      display: none;
+      grid-template-rows: 10% 100% 5%;
+      height: 100%;
+      .chat-messages{
+          height: 25rem;
+          .user-details {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+          }
+        }
         .avatar {
           img{
             height: 2rem !important;

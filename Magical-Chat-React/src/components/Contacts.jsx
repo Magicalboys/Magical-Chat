@@ -1,33 +1,32 @@
 import React from 'react'
 import { useState } from 'react';
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import  styled  from 'styled-components';
-import { useNavigate } from 'react-router-dom'
+import { useContacts } from '../utils/Contacts';
+import { useCurrentUser } from '../utils/Chat';
+import { users } from '../utils/Users';
 
-function Contacts({contacts,currentUser,changeChat}) {
+function Contacts({changeChat,handleWelcome}) {
 
-  const [currentUserName,setCurrentUserName] = useState(undefined)
-  const [currentUserImage,setCurrentUserImage] = useState(undefined)
-  const [currentSelected,setCurrentSelected] = useState(undefined)
+  const {contacts,currentUser } = useCurrentUser()
 
-  const navigate = useNavigate();
-  // 更新自己的头像和名字
-  useEffect(()=>{
-    if(currentUser){
-      setCurrentUserImage(currentUser.avatarImage)
-      setCurrentUserName(currentUser.username)
-    }
-  },[currentUser])
+  const { 
+    currentUserName,
+    currentUserImage ,
+    currentSelected ,
+    changeCurrentChat ,
+    ClickAvatar,
+    ClickName
+  } = useContacts({ currentUser, changeChat , handleWelcome})
+ 
 
-  // 高亮选中的消息框
-  const changeCurrentChat = (index,contact) =>{
-    setCurrentSelected(index)
-    changeChat(contact)
+  const [showGroup,setShowGrop] = useState(true) 
+
+  const handleGroup = () =>{
+    setShowGrop(false)
   }
-
-  const handleClick = () =>{
-    navigate('/userdata')
+  
+  const handleUser = () =>{
+    setShowGrop(true)
   }
 
   return (
@@ -38,56 +37,80 @@ function Contacts({contacts,currentUser,changeChat}) {
           <div className="brand">
               <h2>Macgical CHAT</h2>           
           </div>
+          <div className='navigation'>
+              <div className="user" onClick={handleUser}>
+                User
+              </div>
+              <div className="group" onClick={handleGroup}>
+                Group
+              </div>
+          </div>
           <div className="contacts">
-            
-            {
-              contacts.map((contact,index)=>{
-                return(
-                  <div
-                  className = {`contact  ${index === currentSelected ? "selected" : "" }`}
-                  key={index}
-                  onClick={()=>changeCurrentChat(index,contact)}
-                  draggable
-                  >
-                    <div className="avatar">
-                      <img src={`${contact.avatarImage}`} alt={`${contact.username}`}></img>
-                    </div>
-                    <div className="username">
-                      <h2>{contact.username}</h2>
-                    </div>
-                  </div>
-                )
-              })
+           {
+              showGroup? 
+               users(5,contacts.length,contacts,currentSelected,changeCurrentChat,"")
+              :users(0,5,contacts,currentSelected,changeCurrentChat,"groupAvater")
             }
-        
           </div>
           <div className="current-user">
-              <div className="avatar" onClick={handleClick}>
+              <div className="avatar" onClick={ClickAvatar}>
                   <img src={`${currentUserImage}` }></img>
                   </div>
-                  <div className="username">
+                  <div className="username" onClick={ClickName}>
                     <h1>{currentUserName}</h1>
                </div>
           </div>
-        </Container>
-          
-        }
+        </Container>       
+      }
     </>
   )
 }
 const Container = styled.div`
   display: grid;
-  grid-template-rows: 10% 75% 15% ;
+  grid-template-rows: 6% 4% 73% 15% ;
   overflow: hidden;
   background-color: #080420;
   .brand {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap:1rem;
     h2{
       color:white;
       text-transform:uppercase
+    }
+  }
+  gap:0.3rem;
+
+  .navigation{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff34;
+    border-radius: 1rem;
+    cursor: pointer;
+    .user{
+      height: 100%;
+      display: flex;
+      border-top-left-radius:1rem;
+      border-bottom-left-radius:1rem;
+      align-items: center;
+      justify-content: center;
+      width: 50%;
+      :hover{
+        background-color: #9a86f3;
+      }
+    }
+    .group{
+      height: 100%;
+      display: flex;
+      border-top-right-radius:1rem;
+      border-bottom-right-radius:1rem;
+      align-items: center;
+      justify-content: center;
+      width: 50%;
+      :hover{
+        background-color: #9a86f3;
+      }
     }
   }
   .contacts{
@@ -106,7 +129,7 @@ const Container = styled.div`
     }
     .contact{
       background-color: #ffffff39;
-      min-height: 15%;
+      min-height: 12%;
       width: 90%;
       cursor: pointer;
       border-radius:0.4rem;
@@ -121,11 +144,17 @@ const Container = styled.div`
           border-radius: 3rem;
         }
       }
+      .groupAvater{
+        width: 3.6rem !important;
+        height: 3.6rem !important;
+        border-radius:0rem !important;
+      }
       .username{
           h2{
             font-size: 1.2rem;
             font-weight: 590;
             color: white;
+            font-family:STXingkai;
           }
         }
     }
@@ -142,25 +171,65 @@ const Container = styled.div`
     .avatar{
       img {
         height:6rem;
-        border-radius: 3rem;
         cursor: pointer;
+        border-radius: 3rem;
         max-inline-size: 100%;
       }
     }
     .username{
       h1{
+        cursor: pointer;
         font-size: 2rem;
         font-weight: 500;
         color: white;
+        font-family:STXingkai;
       }
     }
   }  
-  @media screen and (min-width:1080px) and (max-width:1300px){
-  
-  }
+  @media screen and (min-width:1080px) and (max-width:1700px){
+       grid-template-rows: 6% 4% 73% 15% ;
+      .contacts{
+        .contact{
+          background-color: #ffffff39;
+          min-height: 12%;
+          width: 90%;
+          .avatar{
+            img {
+              height:2.8em;
+              border-radius: 3rem;
+            }
+          }
+          .groupAvater{
+            width: 3.6rem !important;
+            border-radius:0rem !important;
+          }
+          .username{
+              h2{
+                font-size: 1.2rem;
+                font-weight: 590;
+                color: white;
+                /* font-family:Xingkai SC; */
+              }
+            }
+        }
+      }
+    .current-user {
+        .avatar{
+          img {
+            height:5rem;
+          }
+        }
+        .username{
+          h1{
+            cursor: pointer;
+            font-family:STXingkai;
+          }
+        }
+      }  
+    }
   @media screen and (min-width:720px) and (max-width:1080px){
     display: grid;
-    grid-template-rows: 10% 75% 15% ;
+    grid-template-rows: 6% 4% 75% 15% ;
       .contact{
         background-color: #ffffff39;
         min-height: 15%;
@@ -210,11 +279,12 @@ const Container = styled.div`
 
   @media screen and (min-width:300px) and (max-width:720px){
     display: grid;
-    grid-template-rows: 10% 76% 15% ;
+    grid-template-rows: 6% 4% 75% 15% ;
     .contact {
+      min-height: 18% !important;
         .avatar {
           img {
-            height: 2.3rem !important
+            height: 4rem !important
           }
         }
         .username {
@@ -222,6 +292,7 @@ const Container = styled.div`
             font-size: 1rem !important;
             font-weight: 400 !important;
             color: white;
+
           }
         }
         .selected{
@@ -231,7 +302,7 @@ const Container = styled.div`
       .current-user {
         .avatar{
           img {
-            height:2.1rem;
+            height:4rem;
             max-inline-size: 100%;
           }
         }

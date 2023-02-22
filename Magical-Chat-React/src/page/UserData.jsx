@@ -1,79 +1,90 @@
 import React from 'react'
-import { Link } from "react-router-dom";
-import loader from "../assets/loader.gif";
-import { useState ,useEffect } from "react";
+import { useState  } from "react";
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer,toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import { setAvatarRouter } from '../utils/ApiRoutes';
 import styled from 'styled-components'
-import { handleValidation, toastOptions } from "../utils";
-import { Buffer} from 'buffer'
+import { toastOptions } from "../utils";
 import axios from 'axios';
-import { network } from "../network";
 import { Button } from './Login';
-import Github from './../components/Github';
+import { setNameRouter } from './../utils/ApiRoutes';
 
 export default function UserData() {
   
   const navigate = useNavigate();
 
   const [avatar,setavatar] = useState("")
+
+  const user =  JSON.parse(localStorage.getItem('chat-app-user'));
+
+  const [name,setName] = useState(user.username)
+
   // const [gitHub,setGitHub] = useState("")
-
-  const URL = `https://q2.qlogo.cn/headimg_dl?dst_uin=undefine&spec=100`
   
-  const [ qqAvater , setqqAvater ] = useState(URL)
-
+  const [ qqAvater , setqqAvater ] = useState(user.avatarImage)
 
   const handleSumbit = async( event ) =>{
-
     event.preventDefault()
-
     const url = `https://q2.qlogo.cn/headimg_dl?dst_uin=${avatar[avatar.length - 1]}&spec=100`
-
     setqqAvater(url)
-    
   }
   
-  const handleChange = async ( event ) =>{
+  const handleChangeCount = async ( event ) =>{
     setavatar([...avatar,event.target.value])
-    console.log(avatar)
   }
-  const getGithub = (url) =>{
-
+  
+  const handleChangeName = async ( event ) =>{
+    setName([...name,event.target.value])
   }
+  
   const handleClick = async (  ) =>{
-    try {
+
       // 获取id
-      const user = await JSON.parse(localStorage.getItem('chat-app-user'));
-      
-      console.log(user.id)
-
       // 将头像与id传给数据库
-      const { data } = await axios.post(`${setAvatarRouter}/${user.id}`,{
-        avatarImage:qqAvater
-      })
-      const { code  } = data
+      const username = name[name.length - 1];
 
-      // 头像设置成功
-      if( code === 0 ){
 
-        user.avatarImage = qqAvater;
+      if(name != user.username){
 
-        // 将头像信息设置到 localStorage里面
-        localStorage.setItem('chat-app-user',JSON.stringify(user))
+        const {  data} = await axios.post(`${setNameRouter}/${user.id}`,{
+          username:username
+        })
 
-        navigate('/chat')
+        const { code ,message } = data
+
+
+        if( code === 0 ){
+          user.username = username;
+          // 将头像信息设置到 localStorage里面
+          localStorage.setItem('chat-app-user',JSON.stringify(user))
+          navigate('/chat') 
+        }else{
+          toast.error(message,toastOptions);
+        }
       }
-      
-    } catch (error) {
-      toast.error("设置有误，请重试~",toastOptions);
-    }
+
+      if( qqAvater !== user.avatarImage){
+
+        const { data } = await axios.post(`${setAvatarRouter}/${user.id}`,{
+          avatarImage:qqAvater
+        })
+        // 头像设置成功
+        if( data.code === 0 ){
+          user.avatarImage = qqAvater;
+          // 将头像信息设置到 localStorage里面
+          localStorage.setItem('chat-app-user',JSON.stringify(user))
+          // navigate('/chat')
+          navigate('/chat') 
+        }
+
+      }
+
   }
-    
+  
   return (
      <Container>
+             <ToastContainer/>
         <div className="title-container">
             <h1>
 
@@ -86,21 +97,32 @@ export default function UserData() {
         <div className='dataform'>
             <form onSubmit={(event) => handleSumbit(event)}>
                 <div className="title-input">
-                  <input 
+                  <Input 
                     type='text' 
                     placeholder="输入你的QQ号" 
                     name="count" 
-                    onChange={e => handleChange(e)} />
+                    onChange={e => handleChangeCount(e)} />
                     <Button type='sumbit'>
                     点击预览
                     </Button>
               </div>
             </form>
+
+            <div className="title-name">
+                  <Input 
+                    type='text' 
+                    style={{width:'21.9rem'}}
+                    placeholder="修改你的用户名" 
+                    name="username" 
+                    onChange={e => handleChangeName(e)} />
+              </div>
+            
         <button  className='databtn' type='sumbit' onClick={handleClick}>确认保存 </button>
        </div>
     </Container>
   )
 }
+
 const Container = styled.div` 
     display: flex ;
     justify-content: center;
@@ -124,20 +146,10 @@ const Container = styled.div`
       align-items: center;
       flex-direction: column;
       gap: 3rem;
-      .title-input{
-      input{
-          background-color: transparent;
-          padding: 1rem;
-          border: 0.1rem solid #4e0eff;
-          border-radius: 0.4rem;
-          color: white;
-          width: 60%;
-          font-size: 1.2rem;
-          &:focus{
-            border: 0.1rem solid #997af0;
-            outline: none;
-          }
-        }    
+      form{
+        display: flex ;
+        flex-direction: column;
+        gap: 3rem;
       }
       .databtn{
           background-color: #997af0;
@@ -145,7 +157,6 @@ const Container = styled.div`
           font-weight: bold;
           padding: 1rem 9rem;
           cursor: pointer;
-          
           border-radius:0.4rem;
           font-size: 1rem;
           text-transform: uppercase;
@@ -162,6 +173,7 @@ const Container = styled.div`
     width: 6rem;
     border-radius:3rem;
     background-color: #fff;
+    border: 1px solid rgb(19,19,36);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -169,7 +181,23 @@ const Container = styled.div`
       img {
         background-color: #fff;
         border-radius:3rem;
+        height: 6rem ;
+        width: 6rem;
         transition: 0.5s ease-in-out;
       } 
   }
+`
+
+const Input = styled.input`
+    background-color: transparent;
+    padding: 1rem;
+    border: 0.1rem solid #4e0eff;
+    border-radius: 0.4rem;
+    color: white;
+    width: 60%;
+    font-size: 1.2rem;
+    &:focus{
+      border: 0.1rem solid #997af0;
+      outline: none;
+    }
 `
