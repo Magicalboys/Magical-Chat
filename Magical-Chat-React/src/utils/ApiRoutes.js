@@ -1,9 +1,9 @@
 // export const host = "https://chat.magicalboy.cn:8000"
 // export const host = "http://144.48.240.169:8000"
-export const host = "https://node.magicalboy.cn"
+export const host = "http://localhost:8000"
 // export const host = "https://chat.magicalboy.cn/api"
 // export const SOCKETHOST = "ws://chat.magicalboy.cn:8000"
-export const SOCKETHOST = "wss://node.magicalboy.cn"
+export const SOCKETHOST = "ws://localhost:8000"
 // export const SOCKETHOST = "ws://chat.magicalboy.cn/api"
 
 export const github = "https://github.com/Magicalboys/Magical-Chat"

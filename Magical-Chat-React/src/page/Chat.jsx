@@ -34,6 +34,7 @@ function Chat (){
   // const handleShow = (show) => { 
   //   setShow(show) ;
   // }
+  
   // useEffect(()=>{
   //   if (window.screen.availWidth > 300 && window.screen.availWidth < 720 && show) {
   //     // 当前设备是移动设备
