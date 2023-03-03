@@ -1,77 +1,67 @@
-import React, { useEffect, useState,useRef } from "react";
-import styled  from 'styled-components';
+import React, { useEffect, useState, useRef } from "react";
+import { createContext } from "react";
+import styled from 'styled-components';
 import { Contacts } from "../components/Contacts";
-import { Welcome }  from './../components/Welcome';
+import { Welcome } from './../components/Welcome';
 import ChatContainer from "../components/ChatContainer";
 import { io } from 'socket.io-client'
 import { SOCKETHOST } from './../utils/ApiRoutes';
-import {  useCurrentUser } from "../utils/Chat";
-function Chat (){
+import { useCurrentUser } from "../utils/Chat";
+
+export const UserContext = createContext();
+
+function Chat() {
+
 
   const socket = useRef();
-  
-  const [ currentChat, setCurrentChat ] = useState(undefined)
 
-  const [showWelcome,setShowWelcome] = useState(true)
+  const [currentChat, setCurrentChat] = useState(undefined)
 
-  const {isLoaded, currentUser , contacts } = useCurrentUser()
+  const [showWelcome, setShowWelcome] = useState(true)
+
+  const { isLoaded, currentUser } = useCurrentUser()
+
 
   // 建立socket连接,将当前用户信息传给后端
-  useEffect(()=>{
-    if(currentUser){
+  useEffect(() => {
+    if (currentUser) {
       socket.current = io(SOCKETHOST)
-      socket.current.emit("add-user",currentUser.username)
+      socket.current.emit("add-user", currentUser.username)
     }
-  },[currentUser])
+  }, [currentUser])
 
   const handleChatChange = (chat) => setCurrentChat(chat)
- 
+
   const handleWelcome = (showWelcome) => setShowWelcome(showWelcome);
 
-  const [show,setShow] = useState(true)
+  const [show, setShow] = useState(true)
 
-  // const [showUser,setShowUser] = useState(true)
-  // const handleShow = (show) => { 
-  //   setShow(show) ;
-  // }
-  
-  // useEffect(()=>{
-  //   if (window.screen.availWidth > 300 && window.screen.availWidth < 720 && show) {
-  //     // 当前设备是移动设备
-  //     setShowUser(false)
-  //   }
-  // },[show])
-  
-  // useEffect(()=>{
-  //   if (window.screen.availWidth > 300 && window.screen.availWidth < 720 ) {
-  //     // 当前设备是移动设备
-  //     setShow(false)
-  //   }
-  // },[window.screen.availWidth])
-  
+
   return (
-    <Container>
-      <div className="container">
-        {/* {
-          showUser &&
-          <Contacts changeChat = {handleChatChange} handleWelcome={handleWelcome} handleShow={handleShow}/> 
-        } */}
-        <>
-        <Contacts changeChat = {handleChatChange} handleWelcome={handleWelcome}/> 
+    <UserContext.Provider value={{currentChat,currentUser,socket,handleChatChange,handleWelcome}}>
+      <Container>
+        <div className="container">
+          {/* {
+              showUser &&
+              <Contacts changeChat = {handleChatChange} handleWelcome={handleWelcome} handleShow={handleShow}/> 
+            } */}
+          <>
+            <Contacts />
 
-          {
-            show && (
-              !showWelcome|| ( isLoaded   &&
-                currentChat === undefined )? (
-                  <Welcome  currentUser = {currentUser} ></Welcome>
-                ):(
-                  <ChatContainer  currentChat = {currentChat} currentUser = { currentUser } socket={socket}/>
+            {
+              show && (
+                !showWelcome || (isLoaded &&
+                  currentChat === undefined) ? (
+                  <Welcome ></Welcome>
+                ) : (
+                  <ChatContainer/>
                 )
-            )
-          }
-        </>
-      </div>
-    </Container>
+              )
+            }
+          </>
+        </div>
+      </Container>
+    </UserContext.Provider>
   )
 }
 const Container = styled.div`

@@ -1,4 +1,4 @@
-import React , { useState }from 'react'
+import React , { useContext, useState }from 'react'
 import styled from 'styled-components'
 import ChatInput from './ChatInput';
 import Logout from './Logout';
@@ -6,7 +6,10 @@ import { Image } from '../utils';
 import { groupMessage, userMessage } from '../utils/Message'; 
 import { useAllMessage, useGetMessage } from '../utils/GetMessage';
 import { useCurrentUser } from '../utils/Chat';
-export default function ChatContainer({ currentUser,currentChat,socket}) {
+import { UserContext } from '../page/Chat';
+export default function ChatContainer() {
+
+  const { currentUser,currentChat,socket } = useContext(UserContext)
 
   const [ sendChater ,setSendChater ] = useState(currentChat)
 
@@ -15,7 +18,8 @@ export default function ChatContainer({ currentUser,currentChat,socket}) {
   const { contacts  } = useCurrentUser()
 
   const { messages:Gmessages , handleSendMsg:GhandleSendMsg ,scrollRef:GscrollRef } 
-  =  useAllMessage({ currentChat , currentUser ,socket,contacts,sendChater})
+
+  =  useAllMessage({contacts})
 
   return (
     <>{

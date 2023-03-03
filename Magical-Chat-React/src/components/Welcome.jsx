@@ -1,8 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { UserContext } from './../page/Chat';
 import styled from 'styled-components'
 import robot from '../assets/robot.gif'
 import { github } from '../utils/ApiRoutes'
-function Welcome({currentUser}) {
+
+function Welcome() {
+
+  const { currentUser } = useContext(UserContext)
+  
   return (
     <Container>
       <a href={github} lang="en" > <img src={robot} alt='Robot'lang='en' ></img></a>

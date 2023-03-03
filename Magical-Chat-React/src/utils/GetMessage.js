@@ -1,10 +1,14 @@
 import React from 'react'
 import axios  from 'axios';
 import { addMessageRouter, getAllMessageRouter, getMessageRouter } from './ApiRoutes';
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { useState , useRef} from 'react';
+import { UserContext } from './../page/Chat';
 
-const useGetMessage = ({ currentChat , currentUser ,socket}) =>{
+const useGetMessage = () =>{
+
+  const { currentUser,currentChat,socket } = useContext(UserContext)
+
   const [ messages , setMessages ] = useState([])
   const [ arrivalMessage , setArrivalMessage ] = useState(null)
   
@@ -13,6 +17,7 @@ const useGetMessage = ({ currentChat , currentUser ,socket}) =>{
   // 获取消息
   const getMegs = async() => {
     if( currentChat && currentUser ){
+
       const { data }  = await axios.post(getMessageRouter,{
       from:currentUser.username,
       to:currentChat.username,
@@ -21,7 +26,7 @@ const useGetMessage = ({ currentChat , currentUser ,socket}) =>{
       setMessages( Megs );
     }
   } 
-
+  
   useEffect(() => { getMegs() } , [currentChat])
 
   // 将消息存入数据库
@@ -74,7 +79,9 @@ const useGetMessage = ({ currentChat , currentUser ,socket}) =>{
 }
 
 
-const useAllMessage = ({ currentChat , currentUser ,socket,contacts,sendChater})=>{
+const useAllMessage = ({contacts})=>{
+
+  const { currentUser,currentChat,socket } = useContext(UserContext)
 
   const [ messages , setMessages ] = useState([])
   const [ arrivalMessage , setArrivalMessage ] = useState(null)

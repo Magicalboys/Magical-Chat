@@ -1,18 +1,22 @@
 
 import React from 'react'
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'
+import { UserContext } from '../page/Chat';
 
-const useContacts = ({currentUser,changeChat,handleWelcome})=>{
+const useContacts = ()=>{
+
+  const { currentUser,handleChatChange,handleWelcome } = useContext(UserContext)
+
   const [currentUserName,setCurrentUserName] = useState(undefined)
 
   const [currentUserImage,setCurrentUserImage] = useState(undefined)
 
   const [currentSelected,setCurrentSelected] = useState(undefined)
   
-
   const navigate = useNavigate();
+
   // 更新自己的头像和名字
   useEffect(()=>{
     if(currentUser){
@@ -25,7 +29,7 @@ const useContacts = ({currentUser,changeChat,handleWelcome})=>{
   const changeCurrentChat = (index,contact) =>{
     setCurrentSelected(index)
     // console.log(contact)
-    changeChat(contact)
+    handleChatChange(contact)
     handleWelcome(true)
   }
 

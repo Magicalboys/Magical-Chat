@@ -5,9 +5,9 @@ import { useContacts } from '../utils/Contacts';
 import { useCurrentUser } from '../utils/Chat';
 import { users } from '../utils/Users';
 
-function Contacts({changeChat,handleWelcome}) {
+function Contacts() {
 
-  const {contacts,currentUser } = useCurrentUser()
+  const { contacts, } = useCurrentUser()
 
   const { 
     currentUserName,
@@ -16,7 +16,7 @@ function Contacts({changeChat,handleWelcome}) {
     changeCurrentChat ,
     ClickAvatar,
     ClickName
-  } = useContacts({ currentUser, changeChat , handleWelcome})
+  } = useContacts()
  
 
   const [showGroup,setShowGrop] = useState(true) 
