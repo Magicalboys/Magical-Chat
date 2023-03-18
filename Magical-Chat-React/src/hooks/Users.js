@@ -1,4 +1,4 @@
-import { Image } from "."
+import { Image } from "utils"
 export const users = (start,end ,contacts,currentSelected,changeCurrentChat,groupAvater) =>{
 
   return (

@@ -1,25 +1,25 @@
-import React , { useContext, useState }from 'react'
+import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
 import ChatInput from './ChatInput';
 import Logout from './Logout';
 import { Image } from '../utils';
-import { groupMessage, userMessage } from '../utils/Message'; 
-import { useAllMessage, useGetMessage } from '../utils/GetMessage';
-import { useCurrentUser } from '../utils/Chat';
-import { UserContext } from '../page/Chat';
+import { groupMessage, userMessage } from '../hooks/Message';
+import { useAllMessage, useGetMessage } from '../hooks/GetMessage';
+import { useCurrentUser } from '../hooks/Chat';
+import { UserContext } from '../view/Chat';
 export default function ChatContainer() {
 
-  const { currentUser,currentChat,socket } = useContext(UserContext)
+  const { currentUser, currentChat, socket } = useContext(UserContext)
 
-  const [ sendChater ,setSendChater ] = useState(currentChat)
+  const [sendChater, setSendChater] = useState(currentChat)
 
-  const { messages , handleSendMsg ,scrollRef } =  useGetMessage({ currentChat , currentUser ,socket,sendChater})
- 
-  const { contacts  } = useCurrentUser()
+  const { messages, handleSendMsg, scrollRef } = useGetMessage({ currentChat, currentUser, socket, sendChater })
 
-  const { messages:Gmessages , handleSendMsg:GhandleSendMsg ,scrollRef:GscrollRef } 
+  const { contacts } = useCurrentUser()
 
-  =  useAllMessage({contacts})
+  const { messages: Gmessages, handleSendMsg: GhandleSendMsg, scrollRef: GscrollRef }
+
+    = useAllMessage({ contacts })
 
   return (
     <>{
@@ -28,25 +28,25 @@ export default function ChatContainer() {
           <div className="chat-header">
             <div className="user-details">
               <div className="avatar">
-                <img src={`${  currentChat.id > 5 ?currentChat?.avatarImage :Image[ currentChat.id]}`}></img>
+                <img src={`${currentChat.id > 5 ? currentChat?.avatarImage : Image[currentChat.id]}`}></img>
               </div>
               <div className="username">
                 <h2>{currentChat?.username}</h2>
               </div>
             </div>
-            <Logout/>
+            <Logout />
           </div>
           <div className="chat-messages">
-          {
-             currentChat.id > 5 ?  
-              userMessage({messages,scrollRef,currentUser,currentChat})
-             : groupMessage({Gmessages, GscrollRef ,currentUser,currentChat})
-          }
+            {
+              currentChat.id > 5 ?
+                userMessage({ messages, scrollRef, currentUser, currentChat })
+                : groupMessage({ Gmessages, GscrollRef, currentUser, currentChat })
+            }
           </div>
           {
-             currentChat.id > 5 ?  
-             <ChatInput handleSendMsg = { handleSendMsg } currentSendChat = {currentChat} setSendChater = {setSendChater}/>
-            : <ChatInput handleSendMsg = { GhandleSendMsg } currentSendChat = {currentChat} setSendChater = {setSendChater}/>
+            currentChat.id > 5 ?
+              <ChatInput handleSendMsg={handleSendMsg} currentSendChat={currentChat} setSendChater={setSendChater} />
+              : <ChatInput handleSendMsg={GhandleSendMsg} currentSendChat={currentChat} setSendChater={setSendChater} />
           }
         </Container>
       )

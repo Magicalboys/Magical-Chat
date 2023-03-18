@@ -1,11 +1,11 @@
 import React from 'react'
-import loader from "../assets/loader.gif";
+import loader from "@/assets/picture/loader.gif";
 import { useState  } from "react";
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
 import styled from 'styled-components'
 import { Button } from './Login';
-import { useAvater } from '../utils/Avater';
+import { useAvater } from '@/hooks/Avater';
 
 export default function Avater() {
   

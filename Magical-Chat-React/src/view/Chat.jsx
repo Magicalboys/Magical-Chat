@@ -2,11 +2,11 @@ import React, { useEffect, useState, useRef } from "react";
 import { createContext } from "react";
 import styled from 'styled-components';
 import { Contacts } from "../components/Contacts";
-import { Welcome } from './../components/Welcome';
-import ChatContainer from "../components/ChatContainer";
+import { Welcome } from 'components/Welcome';
+import ChatContainer from "components/ChatContainer";
 import { io } from 'socket.io-client'
-import { SOCKETHOST } from './../utils/ApiRoutes';
-import { useCurrentUser } from "../utils/Chat";
+import { SOCKETHOST } from 'utils/api';
+import { useCurrentUser } from "hooks/Chat";
 
 export const UserContext = createContext();
 
@@ -38,7 +38,7 @@ function Chat() {
 
 
   return (
-    <UserContext.Provider value={{currentChat,currentUser,socket,handleChatChange,handleWelcome}}>
+    <UserContext.Provider value={{ currentChat, currentUser, socket, handleChatChange, handleWelcome }}>
       <Container>
         <div className="container">
           {/* {
@@ -54,7 +54,7 @@ function Chat() {
                   currentChat === undefined) ? (
                   <Welcome ></Welcome>
                 ) : (
-                  <ChatContainer/>
+                  <ChatContainer />
                 )
               )
             }

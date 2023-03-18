@@ -1,31 +1,31 @@
 import React from 'react'
 import { useState } from 'react';
-import  styled  from 'styled-components';
-import { useContacts } from '../utils/Contacts';
-import { useCurrentUser } from '../utils/Chat';
-import { users } from '../utils/Users';
+import styled from 'styled-components';
+import { useContacts } from '../hooks/Contacts';
+import { useCurrentUser } from '../hooks/Chat';
+import { users } from '../hooks/Users';
 
 function Contacts() {
 
   const { contacts, } = useCurrentUser()
 
-  const { 
+  const {
     currentUserName,
-    currentUserImage ,
-    currentSelected ,
-    changeCurrentChat ,
+    currentUserImage,
+    currentSelected,
+    changeCurrentChat,
     ClickAvatar,
     ClickName
   } = useContacts()
- 
 
-  const [showGroup,setShowGrop] = useState(true) 
 
-  const handleGroup = () =>{
+  const [showGroup, setShowGrop] = useState(true)
+
+  const handleGroup = () => {
     setShowGrop(false)
   }
-  
-  const handleUser = () =>{
+
+  const handleUser = () => {
     setShowGrop(true)
   }
 
@@ -35,32 +35,32 @@ function Contacts() {
         currentUserImage && currentUserName &&
         <Container>
           <div className="brand">
-              <h2>Macgical CHAT</h2>           
+            <h2>Macgical CHAT</h2>
           </div>
           <div className='navigation'>
-              <div className="user" onClick={handleUser}>
-                User
-              </div>
-              <div className="group" onClick={handleGroup}>
-                Group
-              </div>
+            <div className="user" onClick={handleUser}>
+              User
+            </div>
+            <div className="group" onClick={handleGroup}>
+              Group
+            </div>
           </div>
           <div className="contacts">
-           {
-              showGroup? 
-               users(5,contacts.length,contacts,currentSelected,changeCurrentChat,"")
-              :users(0,5,contacts,currentSelected,changeCurrentChat,"groupAvater")
+            {
+              showGroup ?
+                users(5, contacts.length, contacts, currentSelected, changeCurrentChat, "")
+                : users(0, 5, contacts, currentSelected, changeCurrentChat, "groupAvater")
             }
           </div>
           <div className="current-user">
-              <div className="avatar" onClick={ClickAvatar}>
-                  <img src={`${currentUserImage}` }></img>
-                  </div>
-                  <div className="username" onClick={ClickName}>
-                    <h1>{currentUserName}</h1>
-               </div>
+            <div className="avatar" onClick={ClickAvatar}>
+              <img src={`${currentUserImage}`}></img>
+            </div>
+            <div className="username" onClick={ClickName}>
+              <h1>{currentUserName}</h1>
+            </div>
           </div>
-        </Container>       
+        </Container>
       }
     </>
   )

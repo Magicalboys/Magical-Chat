@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid'
 const userMessage = ({ messages ,scrollRef,currentUser,currentChat})=>{ 
 
   return (
+    
     <>
      {
        messages && messages?.map( message =>{

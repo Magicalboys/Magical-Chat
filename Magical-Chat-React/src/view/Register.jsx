@@ -5,67 +5,69 @@ import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { registerRouter } from '../utils/ApiRoutes';
-import { handleValidation } from "../utils";
-import { network } from "../network";
+import { registerRouter } from 'utils/api';
+import { handleValidation } from "utils";
+import { network } from "services";
 import { Button } from './Login';
 function Register() {
 
-  const navigate  = useNavigate();
+  const navigate = useNavigate();
 
-  const [values,setValues] = useState({
-    username:"",
-    password:"",
-    confirmPassword:"",
-  },[])
-  
-// 如果注册成功进入登录页面
+  const [values, setValues] = useState({
+    username: "",
+    password: "",
+    confirmPassword: "",
+  }, [])
+
+  // 如果注册成功进入登录页面
   const handleSumbit = async (event) => {
     event.preventDefault()
-    if(handleValidation(values)){
-      
+    if (handleValidation(values)) {
 
-      const flag = await network(values,registerRouter,true);
-      if(flag){
+
+      const flag = await network(values, registerRouter, true);
+      if (flag) {
         navigate('/login')
       }
     }
   }
 
-  const handleChange = (event ) =>{
-    setValues({...values,
-      [event.target.name]:event.target.value})
+  const handleChange = (event) => {
+    setValues({
+      ...values,
+      [event.target.name]: event.target.value
+    })
   }
 
   return (
     <>
-    <ToastContainer/>
+      <ToastContainer />
       <FormContainer>
         <form onSubmit={(event) => handleSumbit(event)}>
           <div className="brand">
             <h1>Chat</h1>
           </div>
-          <input 
-            type='text' 
-            placeholder="Username" 
-            name="username" 
+          <input
+            type='text'
+            placeholder="Username"
+            name="username"
             onChange={e => handleChange(e)} />
-          
-          <input 
-            type='password' 
-            placeholder="Password" 
-            name="password" 
+
+          <input
+            type='password'
+            placeholder="Password"
+            name="password"
             onChange={e => handleChange(e)} />
-          <input 
-            type='password' 
-            placeholder="Password" 
-            name="confirmPassword" 
+          <input
+            type='password'
+            placeholder="Password"
+            name="confirmPassword"
             onChange={e => handleChange(e)} />
 
           <Button type="submit">注册</Button>
-          <span> 
-            已经有一个账号?    
-            <Link to='/login' style={{marginLeft:'0.5rem'}}>Login</Link>
+          <span>
+            已经有一个账号?
+            <Link to='/login' style={{ marginLeft: '0.5rem' }}>Login</Link>
           </span>
         </form>
       </FormContainer>

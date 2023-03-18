@@ -1,9 +1,9 @@
 import { toast } from 'react-toastify'
-import avater_1 from "../assets/avater_1.png";
-import avater_2 from "../assets/avater_2.png";
-import avater_3 from "../assets/avater_3.png";
-import avater_4 from "../assets/avater_4.png";
-import avater_5 from "../assets/avater_5.png";
+import avater_1 from "../assets/picture/avater_1.png";
+import avater_2 from "../assets/picture/avater_2.png";
+import avater_3 from "../assets/picture/avater_3.png";
+import avater_4 from "../assets/picture/avater_4.png";
+import avater_5 from "../assets/picture/avater_5.png";
 
 let Image = [];
 Image[1] = avater_1;

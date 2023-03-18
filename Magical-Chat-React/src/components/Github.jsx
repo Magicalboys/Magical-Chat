@@ -1,40 +1,40 @@
 import React from 'react'
-import { useState  } from "react";
+import { useState } from "react";
 import 'react-toastify/dist/ReactToastify.css'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { Button } from './../page/Login';
+import { Button } from '../view/Login';
 
-export default function Github({getGithub}) {
-  
+export default function Github({ getGithub }) {
+
   const navigate = useNavigate();
 
-  const [avatar,setavatar] = useState("")
-  
-  const [ qqAvater , setqqAvater ] = useState("")
+  const [avatar, setavatar] = useState("")
 
-  
-  const handleChange = async ( event ) =>{
-    setavatar([...avatar,event.target.value])
-    setqqAvater(avatar[avatar.length-1])
+  const [qqAvater, setqqAvater] = useState("")
+
+
+  const handleChange = async (event) => {
+    setavatar([...avatar, event.target.value])
+    setqqAvater(avatar[avatar.length - 1])
   }
   getGithub(qqAvater)
-    
+
   return (
-     <Container>
-        <div className='dataform'>
-                <div className="title-input">
-                  <input 
-                    type='text' 
-                    placeholder="输入你的GitHub地址" 
-                    name="Github" 
-                    onChange={e => handleChange(e)} />
-                    
-                    <Button type="link" >
-                    <a href={`${qqAvater}`}  target="_blank">点击跳转</a>
-                    </Button>
-              </div>
-         </div>
+    <Container>
+      <div className='dataform'>
+        <div className="title-input">
+          <input
+            type='text'
+            placeholder="输入你的GitHub地址"
+            name="Github"
+            onChange={e => handleChange(e)} />
+
+          <Button type="link" >
+            <a href={`${qqAvater}`} target="_blank">点击跳转</a>
+          </Button>
+        </div>
+      </div>
     </Container>
   )
 }

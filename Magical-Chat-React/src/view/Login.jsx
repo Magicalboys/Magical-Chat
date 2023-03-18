@@ -1,65 +1,67 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useState  } from "react";
+import { useState } from "react";
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
-import { loginRouter } from '../utils/ApiRoutes';
+import { loginRouter } from 'utils/api';
 import styled from 'styled-components'
-import { network } from "../network";
+import { network } from "services";
 
 function Login() {
 
-  const navigate  = useNavigate();
+  const navigate = useNavigate();
 
-  const [values,setValues] = useState({
-    username:"",
-    password:""
+  const [values, setValues] = useState({
+    username: "",
+    password: ""
   })
 
   const handleSumbit = async (event) => {
     event.preventDefault()
     // 是否注册成功
-    const success = await network(values,loginRouter,false);
-    
-    if( success ){
+    const success = await network(values, loginRouter, false);
+
+    if (success) {
       // 查看自己曾经是否设置了头像
-      const { avatarImage } =  JSON.parse(localStorage.getItem('chat-app-user'));
+      const { avatarImage } = JSON.parse(localStorage.getItem('chat-app-user'));
 
       // 如果已经设置 直接去 chat 页面   
-      avatarImage ? navigate('/chat') :navigate('/avatar')
+      avatarImage ? navigate('/chat') : navigate('/avatar')
     }
   }
 
-  const handleChange = (event ) =>{
-    setValues({...values,
-      [event.target.name]:event.target.value})
+  const handleChange = (event) => {
+    setValues({
+      ...values,
+      [event.target.name]: event.target.value
+    })
   }
 
   return (
     <>
-    <ToastContainer/>
+      <ToastContainer />
       <FormContainer>
         <form onSubmit={(event) => handleSumbit(event)}>
           <div className="brand">
             <h1>Chat</h1>
           </div>
-          <input 
-            type='text' 
-            placeholder="Username" 
-            name="username" 
+          <input
+            type='text'
+            placeholder="Username"
+            name="username"
             onChange={e => handleChange(e)} />
-          
-          <input 
-            type='password' 
-            placeholder="Password" 
-            name="password" 
+
+          <input
+            type='password'
+            placeholder="Password"
+            name="password"
             onChange={e => handleChange(e)} />
 
           <Button type="submit">登录</Button>
-          <span> 
-            还没有账号?    
-            <Link to='/user' style={{marginLeft:'0.5rem'}}>Register</Link>
+          <span>
+            还没有账号?
+            <Link to='/user' style={{ marginLeft: '0.5rem' }}>Register</Link>
           </span>
         </form>
       </FormContainer>
