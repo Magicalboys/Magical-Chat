@@ -33,7 +33,9 @@ io.on("connection", (socket) => {
 
   socket.on("add-user", (username) => {
     // socket.name = username;
+    
     onlineUsers.set(username, socket.id);
+
   })
 
   socket.on("send-msg", (data) => {

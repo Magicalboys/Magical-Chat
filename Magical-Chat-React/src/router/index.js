@@ -7,6 +7,8 @@ const Login = React.lazy(()=> import("view/Login"))
 const Avater = React.lazy(()=> import("view/Avater"))
 const Chat = React.lazy(()=> import("view/Chat"))
 
+// # 写一个防抖函数
+
 const routes = [
   {
     path:"/",

@@ -33,6 +33,5 @@ module.exports = {
         "utils":resolve("src/utils"),
         "view":resolve("src/view")
       }
-
   }
 }
