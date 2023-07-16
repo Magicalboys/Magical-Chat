@@ -3,7 +3,7 @@
 
 用到的技术栈：
 
-React + Koa + MySQL + JWT + Socket.io 的即时通讯聊天室。
+`React` + `Koa` + MySQL + JWT + Socket.io 的即时通讯聊天室。
 
 
 用到的库：
